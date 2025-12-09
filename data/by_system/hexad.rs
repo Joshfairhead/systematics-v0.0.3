@@ -12,23 +12,24 @@ impl HexadSystem {
     pub const SOURCE: &'static str = "Elementary Systematics";
 
     // Vocabulary (from by_vocabulary/k6.rs)
-    pub const TERM_CHARACTERS: [&'static str; 6] = ["Resources", "Values", "Options", "Criteria", "Facts", "Priorities"];
+    // Semantic ordering: Priorities (1), Facts (2), Criteria (3), Options (4), Values (5), Resources (6) when displayed with one-based indexing
+    pub const TERM_CHARACTERS: [&'static str; 6] = ["Priorities", "Facts", "Criteria", "Options", "Values", "Resources"];
     pub const CONNECTIVE_CHARACTERS: [(&'static str, &'static str, &'static str); 15] = [
-        ("Step1", "Resources", "Values"),
-        ("Step2", "Resources", "Options"),
-        ("Step3", "Resources", "Criteria"),
-        ("Step4", "Resources", "Facts"),
-        ("Step5", "Resources", "Priorities"),
-        ("Step6", "Values", "Options"),
-        ("Step7", "Values", "Criteria"),
-        ("Step8", "Values", "Facts"),
-        ("Step9", "Values", "Priorities"),
-        ("Step10", "Options", "Criteria"),
-        ("Step11", "Options", "Facts"),
-        ("Step12", "Options", "Priorities"),
-        ("Step13", "Criteria", "Facts"),
-        ("Step14", "Criteria", "Priorities"),
-        ("Step15", "Facts", "Priorities"),
+        ("Step15", "Priorities", "Facts"),
+        ("Step14", "Priorities", "Criteria"),
+        ("Step12", "Priorities", "Options"),
+        ("Step9", "Priorities", "Values"),
+        ("Step5", "Priorities", "Resources"),
+        ("Step13", "Facts", "Criteria"),
+        ("Step11", "Facts", "Options"),
+        ("Step8", "Facts", "Values"),
+        ("Step4", "Facts", "Resources"),
+        ("Step10", "Criteria", "Options"),
+        ("Step7", "Criteria", "Values"),
+        ("Step3", "Criteria", "Resources"),
+        ("Step6", "Options", "Values"),
+        ("Step2", "Options", "Resources"),
+        ("Step1", "Values", "Resources"),
     ];
 
     // Topology (from by_topology/k6.rs)
@@ -42,46 +43,45 @@ impl HexadSystem {
     ];
 
     // Geometry (from by_geometry/k6.rs)
-    // Points ordered to match vocabulary: Resources, Values, Options, Criteria, Facts, Priorities
-    // Positioned clockwise from top: Values, Options, Criteria, Facts, Priorities, Resources
+    // Coordinates reordered to match semantic vocabulary ordering (reversed from original)
     pub const POINTS: [Coordinates; 6] = [
-        Coordinates { x: -0.866, y: 0.5, z: None },         // index 0: Resources (upper left)
-        Coordinates { x: 0.0, y: 1.0, z: None },            // index 1: Values (top)
-        Coordinates { x: 0.866, y: 0.5, z: None },          // index 2: Options (upper right)
-        Coordinates { x: 0.866, y: -0.5, z: None },         // index 3: Criteria (lower right)
-        Coordinates { x: 0.0, y: -1.0, z: None },           // index 4: Facts (bottom)
-        Coordinates { x: -0.866, y: -0.5, z: None },        // index 5: Priorities (lower left)
+        Coordinates { x: -0.866, y: -0.5, z: None },        // index 0: Priorities (lower left)
+        Coordinates { x: 0.0, y: -1.0, z: None },           // index 1: Facts (bottom)
+        Coordinates { x: 0.866, y: -0.5, z: None },         // index 2: Criteria (lower right)
+        Coordinates { x: 0.866, y: 0.5, z: None },          // index 3: Options (upper right)
+        Coordinates { x: 0.0, y: 1.0, z: None },            // index 4: Values (top)
+        Coordinates { x: -0.866, y: 0.5, z: None },         // index 5: Resources (upper left)
     ];
     pub const LINES: [(Coordinates, Coordinates); 15] = [
-        // Edge 0-1: Resources to Values
-        (Coordinates { x: -0.866, y: 0.5, z: None }, Coordinates { x: 0.0, y: 1.0, z: None }),
-        // Edge 0-2: Resources to Options
-        (Coordinates { x: -0.866, y: 0.5, z: None }, Coordinates { x: 0.866, y: 0.5, z: None }),
-        // Edge 0-3: Resources to Criteria
-        (Coordinates { x: -0.866, y: 0.5, z: None }, Coordinates { x: 0.866, y: -0.5, z: None }),
-        // Edge 0-4: Resources to Facts
-        (Coordinates { x: -0.866, y: 0.5, z: None }, Coordinates { x: 0.0, y: -1.0, z: None }),
-        // Edge 0-5: Resources to Priorities
-        (Coordinates { x: -0.866, y: 0.5, z: None }, Coordinates { x: -0.866, y: -0.5, z: None }),
-        // Edge 1-2: Values to Options
-        (Coordinates { x: 0.0, y: 1.0, z: None }, Coordinates { x: 0.866, y: 0.5, z: None }),
-        // Edge 1-3: Values to Criteria
-        (Coordinates { x: 0.0, y: 1.0, z: None }, Coordinates { x: 0.866, y: -0.5, z: None }),
-        // Edge 1-4: Values to Facts
-        (Coordinates { x: 0.0, y: 1.0, z: None }, Coordinates { x: 0.0, y: -1.0, z: None }),
-        // Edge 1-5: Values to Priorities
-        (Coordinates { x: 0.0, y: 1.0, z: None }, Coordinates { x: -0.866, y: -0.5, z: None }),
-        // Edge 2-3: Options to Criteria
-        (Coordinates { x: 0.866, y: 0.5, z: None }, Coordinates { x: 0.866, y: -0.5, z: None }),
-        // Edge 2-4: Options to Facts
-        (Coordinates { x: 0.866, y: 0.5, z: None }, Coordinates { x: 0.0, y: -1.0, z: None }),
-        // Edge 2-5: Options to Priorities
-        (Coordinates { x: 0.866, y: 0.5, z: None }, Coordinates { x: -0.866, y: -0.5, z: None }),
-        // Edge 3-4: Criteria to Facts
-        (Coordinates { x: 0.866, y: -0.5, z: None }, Coordinates { x: 0.0, y: -1.0, z: None }),
-        // Edge 3-5: Criteria to Priorities
-        (Coordinates { x: 0.866, y: -0.5, z: None }, Coordinates { x: -0.866, y: -0.5, z: None }),
-        // Edge 4-5: Facts to Priorities
-        (Coordinates { x: 0.0, y: -1.0, z: None }, Coordinates { x: -0.866, y: -0.5, z: None }),
+        // Edge 0-1: Priorities to Facts
+        (Coordinates { x: -0.866, y: -0.5, z: None }, Coordinates { x: 0.0, y: -1.0, z: None }),
+        // Edge 0-2: Priorities to Criteria
+        (Coordinates { x: -0.866, y: -0.5, z: None }, Coordinates { x: 0.866, y: -0.5, z: None }),
+        // Edge 0-3: Priorities to Options
+        (Coordinates { x: -0.866, y: -0.5, z: None }, Coordinates { x: 0.866, y: 0.5, z: None }),
+        // Edge 0-4: Priorities to Values
+        (Coordinates { x: -0.866, y: -0.5, z: None }, Coordinates { x: 0.0, y: 1.0, z: None }),
+        // Edge 0-5: Priorities to Resources
+        (Coordinates { x: -0.866, y: -0.5, z: None }, Coordinates { x: -0.866, y: 0.5, z: None }),
+        // Edge 1-2: Facts to Criteria
+        (Coordinates { x: 0.0, y: -1.0, z: None }, Coordinates { x: 0.866, y: -0.5, z: None }),
+        // Edge 1-3: Facts to Options
+        (Coordinates { x: 0.0, y: -1.0, z: None }, Coordinates { x: 0.866, y: 0.5, z: None }),
+        // Edge 1-4: Facts to Values
+        (Coordinates { x: 0.0, y: -1.0, z: None }, Coordinates { x: 0.0, y: 1.0, z: None }),
+        // Edge 1-5: Facts to Resources
+        (Coordinates { x: 0.0, y: -1.0, z: None }, Coordinates { x: -0.866, y: 0.5, z: None }),
+        // Edge 2-3: Criteria to Options
+        (Coordinates { x: 0.866, y: -0.5, z: None }, Coordinates { x: 0.866, y: 0.5, z: None }),
+        // Edge 2-4: Criteria to Values
+        (Coordinates { x: 0.866, y: -0.5, z: None }, Coordinates { x: 0.0, y: 1.0, z: None }),
+        // Edge 2-5: Criteria to Resources
+        (Coordinates { x: 0.866, y: -0.5, z: None }, Coordinates { x: -0.866, y: 0.5, z: None }),
+        // Edge 3-4: Options to Values
+        (Coordinates { x: 0.866, y: 0.5, z: None }, Coordinates { x: 0.0, y: 1.0, z: None }),
+        // Edge 3-5: Options to Resources
+        (Coordinates { x: 0.866, y: 0.5, z: None }, Coordinates { x: -0.866, y: 0.5, z: None }),
+        // Edge 4-5: Values to Resources
+        (Coordinates { x: 0.0, y: 1.0, z: None }, Coordinates { x: -0.866, y: 0.5, z: None }),
     ];
 }

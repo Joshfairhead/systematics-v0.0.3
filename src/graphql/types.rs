@@ -62,12 +62,14 @@ pub struct Edge {
 
 #[Object]
 impl Edge {
+    /// From node (one-based indexing)
     async fn from(&self) -> i32 {
-        self.from as i32
+        (self.from + 1) as i32
     }
 
+    /// To node (one-based indexing)
     async fn to(&self) -> i32 {
-        self.to as i32
+        (self.to + 1) as i32
     }
 }
 
@@ -182,8 +184,9 @@ impl System {
         &self.connective_characters
     }
 
+    /// Nodes with one-based indexing
     async fn nodes(&self) -> Vec<i32> {
-        self.nodes.iter().map(|&i| i as i32).collect()
+        self.nodes.iter().map(|&i| (i + 1) as i32).collect()
     }
 
     async fn edges(&self) -> &[Edge] {
@@ -197,6 +200,24 @@ impl System {
     async fn lines(&self) -> &[Line] {
         &self.lines
     }
+
+    /// Get the system to navigate to when clicking a node (node_number is one-based)
+    async fn navigation_target(&self, node_number: i32) -> Option<String> {
+        Self::get_navigation_target(node_number)
+    }
+
+    /// Get all navigation edges from this system
+    async fn navigation_edges(&self) -> Vec<NavigationEdge> {
+        (1..=self.nodes.len())
+            .filter_map(|n| {
+                let n = n as i32;
+                Self::get_navigation_target(n).map(|target| NavigationEdge {
+                    node: n,
+                    target_system: target,
+                })
+            })
+            .collect()
+    }
 }
 
 /// A term within a system
@@ -206,6 +227,13 @@ pub struct Term {
     pub system_name: String,
     pub node: usize,
     pub coordinate: Option<Coordinate>,
+}
+
+/// A navigation edge indicating which system to navigate to when clicking a node
+#[derive(Clone, Debug)]
+pub struct NavigationEdge {
+    pub node: i32,  // One-based node number (for V2 API)
+    pub target_system: String,
 }
 
 #[Object]
@@ -218,8 +246,9 @@ impl Term {
         &self.system_name
     }
 
+    /// Node number with one-based indexing
     async fn node(&self) -> i32 {
-        self.node as i32
+        (self.node + 1) as i32
     }
 
     async fn coordinate(&self) -> Option<Coordinate> {
@@ -229,6 +258,19 @@ impl Term {
     async fn system(&self, ctx: &Context<'_>) -> Result<Option<System>> {
         let query_root = ctx.data::<QueryRoot>()?;
         Ok(query_root.get_system(&self.system_name))
+    }
+}
+
+#[Object]
+impl NavigationEdge {
+    /// The node number (one-based)
+    async fn node(&self) -> i32 {
+        self.node
+    }
+
+    /// The target system name to navigate to
+    async fn target_system(&self) -> &str {
+        &self.target_system
     }
 }
 
@@ -332,6 +374,31 @@ impl QueryRoot {
             .into_iter()
             .filter(|s| s.term_designation.eq_ignore_ascii_case(&designation))
             .collect()
+    }
+}
+
+impl System {
+    /// Helper function to get navigation target (used internally and by GraphQL methods)
+    fn get_navigation_target(node_number: i32) -> Option<String> {
+        if node_number < 1 || node_number > 12 {
+            return None;
+        }
+
+        Some(match node_number {
+            1 => "Monad",
+            2 => "Dyad",
+            3 => "Triad",
+            4 => "Tetrad",
+            5 => "Pentad",
+            6 => "Hexad",
+            7 => "Heptad",
+            8 => "Octad",
+            9 => "Ennead",
+            10 => "Decad",
+            11 => "Undecad",
+            12 => "Dodecad",
+            _ => return None,
+        }.to_string())
     }
 }
 
