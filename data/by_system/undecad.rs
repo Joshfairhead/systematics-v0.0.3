@@ -12,6 +12,8 @@ impl UndecadSystem {
     pub const SOURCE: &'static str = "Elementary Systematics";
 
     // Vocabulary (from by_vocabulary/k11.rs)
+    // TODO: Semantic ordering needs research - verify with domain expert
+    // Current ordering preserved, displayed with one-based indexing (1-11) in V2 API
     pub const TERM_CHARACTERS: [&'static str; 11] = [
         "Position1",
         "Position2",

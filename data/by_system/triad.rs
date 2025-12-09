@@ -12,11 +12,12 @@ impl TriadSystem {
     pub const SOURCE: &'static str = "Elementary Systematics";
 
     // Vocabulary
-    pub const TERM_CHARACTERS: [&'static str; 3] = ["Will", "Function", "Being"];
+    // Semantic ordering: Function (1), Being (2), Will (3) when displayed with one-based indexing
+    pub const TERM_CHARACTERS: [&'static str; 3] = ["Function", "Being", "Will"];
     pub const CONNECTIVE_CHARACTERS: [(&'static str, &'static str, &'static str); 3] = [
-        ("Act1", "Will", "Function"),
-        ("Act2", "Function", "Being"),
-        ("Act3", "Being", "Will"),
+        ("Act1", "Function", "Being"),
+        ("Act2", "Being", "Will"),
+        ("Act3", "Will", "Function"),
     ];
 
     // Topology
@@ -28,14 +29,15 @@ impl TriadSystem {
     ];
 
     // Geometry
+    // Coordinates reordered to match semantic vocabulary ordering
     pub const POINTS: [Coordinates; 3] = [
-        Coordinates { x: 0.0, y: 1.0, z: None },   // Will (top left)
-        Coordinates { x: 0.0, y: -1.0, z: None },  // Function (bottom left)
-        Coordinates { x: 1.0, y: 0.0, z: None },   // Being (right, midpoint vertically)
+        Coordinates { x: 0.0, y: -1.0, z: None },  // 0: Function (bottom left)
+        Coordinates { x: 1.0, y: 0.0, z: None },   // 1: Being (right, midpoint vertically)
+        Coordinates { x: 0.0, y: 1.0, z: None },   // 2: Will (top left)
     ];
     pub const LINES: [(Coordinates, Coordinates); 3] = [
-        (Coordinates { x: 0.0, y: 1.0, z: None }, Coordinates { x: 0.0, y: -1.0, z: None }),  // Will-Function (vertical left)
-        (Coordinates { x: 0.0, y: -1.0, z: None }, Coordinates { x: 1.0, y: 0.0, z: None }),  // Function-Being (bottom right)
-        (Coordinates { x: 1.0, y: 0.0, z: None }, Coordinates { x: 0.0, y: 1.0, z: None }),  // Being-Will (top right)
+        (Coordinates { x: 0.0, y: -1.0, z: None }, Coordinates { x: 1.0, y: 0.0, z: None }),  // Function-Being (edge 0-1)
+        (Coordinates { x: 1.0, y: 0.0, z: None }, Coordinates { x: 0.0, y: 1.0, z: None }),   // Being-Will (edge 1-2)
+        (Coordinates { x: 0.0, y: 1.0, z: None }, Coordinates { x: 0.0, y: -1.0, z: None }),  // Will-Function (edge 2-0)
     ];
 }

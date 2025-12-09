@@ -12,14 +12,15 @@ impl TetradSystem {
     pub const SOURCE: &'static str = "Elementary Systematics";
 
     // Vocabulary
-    pub const TERM_CHARACTERS: [&'static str; 4] = ["Ideal", "Directive", "Instrumental", "Ground"];
+    // Semantic ordering: Ground (1), Instrumental (2), Directive (3), Ideal (4) when displayed with one-based indexing
+    pub const TERM_CHARACTERS: [&'static str; 4] = ["Ground", "Instrumental", "Directive", "Ideal"];
     pub const CONNECTIVE_CHARACTERS: [(&'static str, &'static str, &'static str); 6] = [
-        ("Receptive Regard", "Ideal", "Directive"),
-        ("Effectual Compatibility", "Ideal", "Instrumental"),
-        ("Motivational Imperative", "Ideal", "Ground"),
-        ("Demonstrable Activity", "Directive", "Instrumental"),
-        ("Material Mastery", "Directive", "Ground"),
-        ("Technical Power", "Instrumental", "Ground"),
+        ("Technical Power", "Ground", "Instrumental"),
+        ("Material Mastery", "Ground", "Directive"),
+        ("Motivational Imperative", "Ground", "Ideal"),
+        ("Demonstrable Activity", "Instrumental", "Directive"),
+        ("Effectual Compatibility", "Instrumental", "Ideal"),
+        ("Receptive Regard", "Directive", "Ideal"),
     ];
 
     // Topology
@@ -34,18 +35,19 @@ impl TetradSystem {
     ];
 
     // Geometry
+    // Coordinates reordered to match semantic vocabulary ordering (reversed from original)
     pub const POINTS: [Coordinates; 4] = [
-        Coordinates { x: 0.0, y: 1.0, z: None },   // ideal
-        Coordinates { x: 1.0, y: 0.0, z: None },   // directive
-        Coordinates { x: -1.0, y: 0.0, z: None },  // instrumental
-        Coordinates { x: 0.0, y: -1.0, z: None },  // ground
+        Coordinates { x: 0.0, y: -1.0, z: None },  // 0: ground (bottom)
+        Coordinates { x: -1.0, y: 0.0, z: None },  // 1: instrumental (left)
+        Coordinates { x: 1.0, y: 0.0, z: None },   // 2: directive (right)
+        Coordinates { x: 0.0, y: 1.0, z: None },   // 3: ideal (top)
     ];
     pub const LINES: [(Coordinates, Coordinates); 6] = [
-        (Coordinates { x: 0.0, y: 1.0, z: None }, Coordinates { x: 1.0, y: 0.0, z: None }),  // ideal-directive
-        (Coordinates { x: 0.0, y: 1.0, z: None }, Coordinates { x: -1.0, y: 0.0, z: None }),  // ideal-instrumental
-        (Coordinates { x: 0.0, y: 1.0, z: None }, Coordinates { x: 0.0, y: -1.0, z: None }),  // ideal-ground
-        (Coordinates { x: 1.0, y: 0.0, z: None }, Coordinates { x: -1.0, y: 0.0, z: None }),  // directive-instrumental
-        (Coordinates { x: 1.0, y: 0.0, z: None }, Coordinates { x: 0.0, y: -1.0, z: None }),  // directive-ground
-        (Coordinates { x: -1.0, y: 0.0, z: None }, Coordinates { x: 0.0, y: -1.0, z: None }),  // instrumental-ground
+        (Coordinates { x: 0.0, y: -1.0, z: None }, Coordinates { x: -1.0, y: 0.0, z: None }),  // ground-instrumental (edge 0-1)
+        (Coordinates { x: 0.0, y: -1.0, z: None }, Coordinates { x: 1.0, y: 0.0, z: None }),  // ground-directive (edge 0-2)
+        (Coordinates { x: 0.0, y: -1.0, z: None }, Coordinates { x: 0.0, y: 1.0, z: None }),  // ground-ideal (edge 0-3)
+        (Coordinates { x: -1.0, y: 0.0, z: None }, Coordinates { x: 1.0, y: 0.0, z: None }),  // instrumental-directive (edge 1-2)
+        (Coordinates { x: -1.0, y: 0.0, z: None }, Coordinates { x: 0.0, y: 1.0, z: None }),  // instrumental-ideal (edge 1-3)
+        (Coordinates { x: 1.0, y: 0.0, z: None }, Coordinates { x: 0.0, y: 1.0, z: None }),  // directive-ideal (edge 2-3)
     ];
 }

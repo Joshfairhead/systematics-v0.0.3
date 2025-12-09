@@ -12,18 +12,19 @@ impl PentadSystem {
     pub const SOURCE: &'static str = "Elementary Systematics";
 
     // Vocabulary (from by_vocabulary/k5.rs)
-    pub const TERM_CHARACTERS: [&'static str; 5] = ["Purpose", "Higher Potential", "Quintessence", "Lower Potential", "Source"];
+    // Semantic ordering: Source (1), Lower Potential (2), Quintessence (3), Higher Potential (4), Purpose (5) when displayed with one-based indexing
+    pub const TERM_CHARACTERS: [&'static str; 5] = ["Source", "Lower Potential", "Quintessence", "Higher Potential", "Purpose"];
     pub const CONNECTIVE_CHARACTERS: [(&'static str, &'static str, &'static str); 10] = [
-        ("Range of Potential", "Higher Potential", "Lower Potential"),
-        ("Range of Significance", "Purpose", "Source"),
-        ("Aspiration", "Quintessence", "Higher Potential"),
-        ("Operation", "Quintessence", "Lower Potential"),
-        ("Output", "Higher Potential", "Purpose"),
-        ("Input", "Lower Potential", "Source"),
-        ("Qualitative Match", "Quintessence", "Purpose"),
-        ("Quantitative Match", "Quintessence", "Source"),
+        ("Input", "Source", "Lower Potential"),
+        ("Quantitative Match", "Source", "Quintessence"),
+        ("Function", "Source", "Higher Potential"),
+        ("Range of Significance", "Source", "Purpose"),
+        ("Operation", "Lower Potential", "Quintessence"),
+        ("Range of Potential", "Lower Potential", "Higher Potential"),
         ("Form", "Lower Potential", "Purpose"),
-        ("Function", "Higher Potential", "Source"),
+        ("Aspiration", "Quintessence", "Higher Potential"),
+        ("Qualitative Match", "Quintessence", "Purpose"),
+        ("Output", "Higher Potential", "Purpose"),
     ];
 
     // Topology (from by_topology/k5.rs)
@@ -42,23 +43,24 @@ impl PentadSystem {
     ];
 
     // Geometry (from by_geometry/k5.rs)
+    // Coordinates reordered to match semantic vocabulary ordering (reversed from original)
     pub const POINTS: [Coordinates; 5] = [
-        Coordinates { x: 1.0, y: 0.75, z: None },    // 0: Purpose (right, top)
-        Coordinates { x: 0.0, y: 0.5, z: None },     // 1: Higher Potential (center, upper)
+        Coordinates { x: 1.0, y: -0.75, z: None },   // 0: Source (right, bottom)
+        Coordinates { x: 0.0, y: -0.5, z: None },    // 1: Lower Potential (center, lower)
         Coordinates { x: -0.75, y: 0.0, z: None },   // 2: Quintessence (left-center, middle)
-        Coordinates { x: 0.0, y: -0.5, z: None },    // 3: Lower Potential (center, lower)
-        Coordinates { x: 1.0, y: -0.75, z: None },   // 4: Source (right, bottom)
+        Coordinates { x: 0.0, y: 0.5, z: None },     // 3: Higher Potential (center, upper)
+        Coordinates { x: 1.0, y: 0.75, z: None },    // 4: Purpose (right, top)
     ];
     pub const LINES: [(Coordinates, Coordinates); 10] = [
-        (Coordinates { x: 1.0, y: 0.75, z: None }, Coordinates { x: 0.0, y: 0.5, z: None }), // Purpose-Higher Potential
-        (Coordinates { x: 0.0, y: 0.5, z: None }, Coordinates { x: -0.75, y: 0.0, z: None }), // Higher Potential-Quintessence
-        (Coordinates { x: -0.75, y: 0.0, z: None }, Coordinates { x: 0.0, y: -0.5, z: None }), // Quintessence-Lower Potential
-        (Coordinates { x: 0.0, y: -0.5, z: None }, Coordinates { x: 1.0, y: -0.75, z: None }), // Lower Potential-Source
-        (Coordinates { x: 1.0, y: -0.75, z: None }, Coordinates { x: 1.0, y: 0.75, z: None }), // Source-Purpose
-        (Coordinates { x: 1.0, y: 0.75, z: None }, Coordinates { x: -0.75, y: 0.0, z: None }), // Purpose-Quintessence
-        (Coordinates { x: 0.0, y: 0.5, z: None }, Coordinates { x: 0.0, y: -0.5, z: None }), // Higher Potential-Lower Potential
-        (Coordinates { x: -0.75, y: 0.0, z: None }, Coordinates { x: 1.0, y: -0.75, z: None }), // Quintessence-Source
-        (Coordinates { x: 0.0, y: -0.5, z: None }, Coordinates { x: 1.0, y: 0.75, z: None }), // Lower Potential-Purpose
-        (Coordinates { x: 1.0, y: -0.75, z: None }, Coordinates { x: 0.0, y: 0.5, z: None }), // Source-Higher Potential
+        (Coordinates { x: 1.0, y: -0.75, z: None }, Coordinates { x: 0.0, y: -0.5, z: None }), // Source-Lower Potential (edge 0-1)
+        (Coordinates { x: 1.0, y: -0.75, z: None }, Coordinates { x: -0.75, y: 0.0, z: None }), // Source-Quintessence (edge 0-2)
+        (Coordinates { x: 1.0, y: -0.75, z: None }, Coordinates { x: 0.0, y: 0.5, z: None }), // Source-Higher Potential (edge 0-3)
+        (Coordinates { x: 1.0, y: -0.75, z: None }, Coordinates { x: 1.0, y: 0.75, z: None }), // Source-Purpose (edge 0-4)
+        (Coordinates { x: 0.0, y: -0.5, z: None }, Coordinates { x: -0.75, y: 0.0, z: None }), // Lower Potential-Quintessence (edge 1-2)
+        (Coordinates { x: 0.0, y: -0.5, z: None }, Coordinates { x: 0.0, y: 0.5, z: None }), // Lower Potential-Higher Potential (edge 1-3)
+        (Coordinates { x: 0.0, y: -0.5, z: None }, Coordinates { x: 1.0, y: 0.75, z: None }), // Lower Potential-Purpose (edge 1-4)
+        (Coordinates { x: -0.75, y: 0.0, z: None }, Coordinates { x: 0.0, y: 0.5, z: None }), // Quintessence-Higher Potential (edge 2-3)
+        (Coordinates { x: -0.75, y: 0.0, z: None }, Coordinates { x: 1.0, y: 0.75, z: None }), // Quintessence-Purpose (edge 2-4)
+        (Coordinates { x: 0.0, y: 0.5, z: None }, Coordinates { x: 1.0, y: 0.75, z: None }), // Higher Potential-Purpose (edge 3-4)
     ];
 }

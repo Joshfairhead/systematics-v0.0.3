@@ -12,6 +12,8 @@ impl DecadSystem {
     pub const SOURCE: &'static str = "Elementary Systematics";
 
     // Vocabulary (from by_vocabulary/k10.rs)
+    // TODO: Semantic ordering needs research - verify with domain expert
+    // Current ordering preserved, displayed with one-based indexing (1-10) in V2 API
     pub const TERM_CHARACTERS: [&'static str; 10] = [
         "Position1",
         "Position2",
