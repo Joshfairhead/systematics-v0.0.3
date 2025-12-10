@@ -25,11 +25,12 @@ impl DyadSystem {
     ];
 
     // Geometry
+    // Coordinates match vocabulary ordering: Existence (1) on right, Essence (2) on left
     pub const POINTS: [Coordinates; 2] = [
-        Coordinates { x: -1.0, y: 0.0, z: None }, // Left
-        Coordinates { x: 1.0, y: 0.0, z: None },  // Right
+        Coordinates { x: 1.0, y: 0.0, z: None },   // 0: Existence (right)
+        Coordinates { x: -1.0, y: 0.0, z: None },  // 1: Essence (left)
     ];
     pub const LINES: [(Coordinates, Coordinates); 1] = [
-        (Coordinates { x: -1.0, y: 0.0, z: None }, Coordinates { x: 1.0, y: 0.0, z: None }), // Single edge
+        (Coordinates { x: 1.0, y: 0.0, z: None }, Coordinates { x: -1.0, y: 0.0, z: None }), // Existence-Essence
     ];
 }
